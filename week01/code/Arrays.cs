@@ -13,7 +13,19 @@ public static class Arrays
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
 
-        return []; // replace this return statement with your own
+        //Process:
+        // 1. Create a new array of size 'length' to hold the multiples.
+        // 2. Loop from 0 to length - 1.
+        // 3. For each index i, multiply the number by (i + 1) and store it in the array at index i.
+        // 4. Return the array after the loop.
+
+        double[] result = new double[length];
+        for (int i = 0; i < length; i++)
+        {
+            result[i] = number * (i + 1);
+        }
+
+        return result; // replace this return statement with your own
     }
 
     /// <summary>
@@ -23,11 +35,29 @@ public static class Arrays
     ///
     /// Because a list is dynamic, this function will modify the existing data list rather than returning a new list.
     /// </summary>
+
     public static void RotateListRight(List<int> data, int amount)
     {
         // TODO Problem 2 Start
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+        /// Process:
+        // 1. Get the total number of elements in the list.
+        // 2. Calculate the split point where the rotation starts: total - amount.
+        // 3. Use GetRange to get the last 'amount' elements.
+        // 4. Use GetRange to get the first 'total - amount' elements.
+        // 5. Clear the original list.
+        // 6. Add the rotated part followed by the remaining part.
+
+        int total = data.Count;
+        int splitPoint = total - amount;
+
+        List<int> rotatedPart = data.GetRange(splitPoint, amount);
+        List<int> remainingPart = data.GetRange(0, splitPoint);
+
+        data.Clear();
+        data.AddRange(rotatedPart);
+        data.AddRange(remainingPart);
     }
 }
