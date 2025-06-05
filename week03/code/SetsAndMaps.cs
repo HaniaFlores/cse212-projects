@@ -22,7 +22,21 @@ public static class SetsAndMaps
     public static string[] FindPairs(string[] words)
     {
         // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        HashSet<string> seen = new HashSet<string>();
+        List<string> pairs = new List<string>();
+
+        foreach (string word in words)
+        {
+            string reversed = word[1].ToString() + word[0].ToString();
+
+            if (word[0] != word[1] && seen.Contains(reversed))
+            {
+                pairs.Add($"{reversed} & {word}");
+            }
+            seen.Add(word);
+        }
+
+        return pairs.ToArray();
     }
 
     /// <summary>
@@ -43,6 +57,15 @@ public static class SetsAndMaps
         {
             var fields = line.Split(",");
             // TODO Problem 2 - ADD YOUR CODE HERE
+            string degree = fields[3].Trim();
+            if (degrees.ContainsKey(degree))
+            {
+                degrees[degree]++;
+            }
+            else
+            {
+                degrees[degree] = 1;
+            }
         }
 
         return degrees;
@@ -67,7 +90,44 @@ public static class SetsAndMaps
     public static bool IsAnagram(string word1, string word2)
     {
         // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+
+        string w1 = word1.ToLower().Replace(" ", "");
+        string w2 = word2.ToLower().Replace(" ", "");
+
+        if (w1.Length != w2.Length)
+        {
+            return false;
+        }
+
+        var dict1 = new Dictionary<char, int>();
+        var dict2 = new Dictionary<char, int>();
+
+        foreach (char c in w1)
+        {
+            if (dict1.ContainsKey(c))
+                dict1[c]++;
+            else
+                dict1[c] = 1;
+        }
+
+        foreach (char c in w2)
+        {
+            if (dict2.ContainsKey(c))
+                dict2[c]++;
+            else
+                dict2[c] = 1;
+        }
+
+        if (dict1.Count != dict2.Count)
+            return false;
+
+        foreach (var kvp in dict1)
+        {
+            if (!dict2.ContainsKey(kvp.Key) || dict2[kvp.Key] != kvp.Value)
+                return false;
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -101,6 +161,29 @@ public static class SetsAndMaps
         // on those classes so that the call to Deserialize above works properly.
         // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
         // 3. Return an array of these string descriptions.
-        return [];
+        if (featureCollection?.Features == null) return Array.Empty<string>();
+
+        var summaries = featureCollection.Features
+            .Where(f => f.Properties != null && f.Properties.Place != null && f.Properties.Mag.HasValue)
+            .Select(f => $"{f.Properties.Place} - Mag {f.Properties.Mag.Value}")
+            .ToArray();
+
+        return summaries;
+    }
+
+    public class FeatureCollection
+    {
+        public List<Feature> Features { get; set; }
+    }
+
+    public class Feature
+    {
+        public Properties Properties { get; set; }
+    }
+
+    public class Properties
+    {
+        public double? Mag { get; set; }
+        public string Place { get; set; }
     }
 }
